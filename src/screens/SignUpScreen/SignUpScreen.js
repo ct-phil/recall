@@ -5,6 +5,9 @@ import CustomButton from '../../components/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/native';
 import {useForm} from 'react-hook-form';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../../firebase";
+
 
 const EMAIL_REGEX =
   /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -15,8 +18,14 @@ const SignUpScreen = () => {
     const pwd = watch('password');
     const navigation = useNavigation();
 
-    const onSignUpPressed = () => {
+    const onSignUpPressed = async data => {
+      try{
+        const user = await createUserWithEmailAndPassword(auth, data.email, data.password);
+        console.log(user)
         navigation.navigate('ConfirmEmail') ;
+      } catch (error) {
+        console.log(error.message);
+      }
       };
     
     const onTermsofUsePressed = () => {

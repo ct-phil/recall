@@ -6,6 +6,9 @@ import CustomButton from '../../components/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButtons';
 import { useNavigation } from '@react-navigation/native';
 import { useForm, Controller } from 'react-hook-form';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from "../../../firebase";
+
 
 const SignInScreen = () => {
     const {height} = useWindowDimensions();
@@ -13,12 +16,17 @@ const SignInScreen = () => {
 
     const {control, handleSubmit, formState: {errors}} = useForm();
 
-    const onSignInPressed = (data) => {
-      console.log(data);
-        // validate user
-        
-        navigation.navigate('HomeScreen');
+    const onSignInPressed = async data => {
+      try{
+        const user = await signInWithEmailAndPassword(auth, data.email, data.password);
+        console.log(user)
+        navigation.navigate('HomeScreen') ;
+      } catch (error) {
+        console.log(error.message);
+      }
       };
+        
+      
 
       const onForgotPasswordPressed = () => {
         navigation.navigate('ForgotPassword');   
